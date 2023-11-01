@@ -16,9 +16,11 @@ import { Input } from "@/components/ui/input";
 import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import Loader from "@/components/shared/Loader";
+import { Link } from "react-router-dom";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 const SignupForm = () => {
-  const isLoading = true;
+  const isLoading = false;
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -32,10 +34,11 @@ const SignupForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SignupValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SignupValidation>) {
+    // Create the User
+    const newUser = await createUserAccount(values);
+
+    console.log(newUser);
   }
 
   return (
@@ -114,6 +117,17 @@ const SignupForm = () => {
               "ثبت نام"
             )}
           </Button>
+
+          <p className="text-small-regular text-light-2 text-center mt-2">
+            آیا حساب کاربری دارید؟
+            <Link
+              to="/sign-in"
+              className="text-primary-500 text-small-semibold ml-1"
+            >
+              {" "}
+              ورود
+            </Link>
+          </p>
         </form>
       </div>
     </Form>
